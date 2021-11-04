@@ -2,9 +2,10 @@ import pyspark
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import expr
 from pyspark.sql.functions import when
+from pyspark.sql.functions import col
 import logging
 logging.basicConfig(filename='Log4j.log',filemode='w',level=logging.DEBUG)
-logger = logging.getLogger('Dataframe Create')
+logger = logging.getLogger('Dataframe Joins')
 
 ### Initiate spark session
 
@@ -57,10 +58,46 @@ empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"leftouter") \
 
 empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"right") \
     .show(truncate=False)
-    '''
+
 empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"righttouter") \
     .show(truncate=False)
-#### this join returns columns from the only left dataset for the records match in the right dataset on join expression,
+#this join returns columns from the only left dataset for the records match in the right dataset on join expression
 # records not matched on join expression are ignored from both left and right datasets.
 empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"leftsemi") \
    .show(truncate=False)
+   
+#leftanti join returns only columns from the left dataset for non-matched records.
+empDF.join(deptDF,empDF.emp_dept_id ==  deptDF.dept_id,"leftanti") \
+   .show(truncate=False)
+
+
+#Self Join is nothing but joining dataframe with same dataframe
+
+
+empDF.alias("emp1").join(empDF.alias("emp2"), \
+    col("emp1.superior_emp_id") == col("emp2.emp_id"),"inner") \
+    .select(col("emp1.emp_id"),col("emp1.name"), \
+      col("emp2.emp_id").alias("superior_emp_id"), \
+      col("emp2.name").alias("superior_emp_name")) \
+   .show(truncate=False)
+'''
+#####Simple ANSI SQL Format#################
+
+
+empDF.createOrReplaceTempView("EMP")
+deptDF.createOrReplaceTempView("DEPT")
+
+joinDF = spark.sql("select * from EMP e, DEPT d where e.emp_dept_id == d.dept_id") \
+  .show(truncate=False)
+
+joinDF = spark.sql("select * from EMP e left outer join DEPT d on e.emp_dept_id == d.dept_id") \
+  .show(truncate=False)
+
+joinDF2 = spark.sql("select * from EMP e INNER JOIN DEPT d ON e.emp_dept_id == d.dept_id") \
+  .show(truncate=False)
+
+joinDF3 = spark.sql("select * from EMP e FULL outer JOIN DEPT d ON e.emp_dept_id == d.dept_id") \
+  .show(truncate=False)
+
+joinDF4 = spark.sql("select * from EMP e right outer  JOIN DEPT d ON e.emp_dept_id == d.dept_id") \
+  .show(truncate=False)
