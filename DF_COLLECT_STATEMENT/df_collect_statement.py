@@ -1,4 +1,6 @@
 import pyspark
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
 from pyspark.sql import SparkSession
 import logging
 logging.basicConfig(filename='Log4j.log',filemode='w',level=logging.DEBUG)
