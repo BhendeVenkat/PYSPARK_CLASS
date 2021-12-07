@@ -9,7 +9,7 @@ logger = logging.getLogger('Dataframe Joins')
 
 ### Initiate spark session
 
-spark = SparkSession.builder.appName('abc').getOrCreate()
+spark = SparkSession.builder.appName('Joins').getOrCreate()
 emp = [(1,"Smith",-1,"2018","10","M",3000), \
     (2,"Rose",1,"2010","20","M",4000), \
     (3,"Williams",1,"2010","10","M",1000), \

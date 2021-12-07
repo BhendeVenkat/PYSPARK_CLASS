@@ -22,4 +22,4 @@ dataframe_csv = spark.read.option("multiline","true").csv('E:\ADF_VIDEOS\SOURCE_
 dataframe.show(10)
 #PARQUET FILES#
 dataframe_parquet = spark.read.option("multiline","true").load('E:\ADF_VIDEOS\SOURCE_FILES\EMPLOYEES.parquet')
-dataframe.show(10)
+dataframe.show(20)

@@ -45,4 +45,5 @@ df.show(truncate=False)
 li=["OH","CA","DE"]
 df.filter(df.state.isin(li)).show()
 '''
+df.show(truncate=False)
 df.filter(df.name.lastname == "Williams") .show(truncate=False)
